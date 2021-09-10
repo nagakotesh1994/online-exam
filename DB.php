@@ -150,6 +150,8 @@ function Get_Subjects()
     $result=$conn->query($query);
     $sno=1;
     $str="";
+    if($result!==false)
+    {
     while($row=mysqli_fetch_array($result))
     {
         $str.="<tr class='odd'>
@@ -159,7 +161,7 @@ function Get_Subjects()
     $sno++;
     }
     return $str;
-
+}
 }
 
 
@@ -168,6 +170,8 @@ function get_sub()
     $conn = DB_Connect();
     $query = "SELECT * FROM `subject`";
             $result=$conn->query($query);
+            if($result!==false)
+            {
             while ($row = mysqli_fetch_array($result)) {
               echo "<li class='nav-item'>
                 <a href='pages/layout/top-nav.html' class='nav-link'>
@@ -176,6 +180,7 @@ function get_sub()
                 </a>
               </li>";
             }
+        }
 
 }
 
@@ -283,6 +288,8 @@ function Get_Questions($sub_id)
     $result=$conn->query($query);
     $sno=1;
     $str="";
+    if($result!==false)
+    {
     while($row=mysqli_fetch_array($result))
     {
         $str.="<tr class='odd'>
@@ -294,6 +301,7 @@ function Get_Questions($sub_id)
     $sno++;
     }
     return $str;
+    }
 
     
 }

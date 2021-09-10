@@ -30,6 +30,38 @@ if ($row = mysqli_fetch_array($result)) {
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <?php
+    $query = "SELECT * FROM `subject`";
+    $result = $conn->query($query);
+    $questions = "";
+    $answers = "";
+    $i = 1;
+    while ($row = mysqli_fetch_array($result)) {
+        $id = $row['id'];
+        $nq = $row['no_questions'];
+        if ($nq > 0) {
+            $query1 = "SELECT * FROM `questions` WHERE id='{$id}'";
+            $result1 = $conn->query($query1);
+
+            while ($row1 = mysqli_fetch_array($result1)) {
+                if ($i == 1) {
+                    $questions .=$row1['question_img'];
+                    $answers .=$row1['qstn_ans'];
+                } else {
+
+                    $questions .= "," . $row1['question_img'];
+                    $answers .= "," . $row1['qstn_ans'];
+                }
+                $i++;
+            }
+        }
+    }
+    $questions_array = explode(',',$questions);
+    $answers_array = explode(',',$answers);
+    //print_r($questions_array);
+    //echo "<br>";
+    //print_r($answers_array);
+    ?>
 </head>
 
 <body class="hold-transition sidebar-collapse" style="background-color: #E9ECEF;">
@@ -52,17 +84,13 @@ if ($row = mysqli_fetch_array($result)) {
                 </li>
             </ul>
 
-
-
-
         </nav>
-
     </div>
 
     <div class="container-fluid">
         <br>
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
 
                 <div class="card card-primary">
                     <div class="card-header">
@@ -71,37 +99,25 @@ if ($row = mysqli_fetch_array($result)) {
                     <!-- tabs start -->
 
                     <div class="tab-content p-4" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel">
                             <?php
-                            for ($i = 1; $i <= 60; $i++) {
-                                echo "<a type='button' class='complected'>{$i}</a>";
+                            for ($i = 0; $i <= 59; $i++) {
+                                $num = $i + 1;
+                                echo "<a type='button' class='incomplete' data-target='#carouselExampleIndicators' id='ind{$num}' data-slide-to='{$i}' class='active'>{$num}</a>";
                             }
-
                             ?>
-
-
 
                         </div>
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-
                             <?php
                             for ($i = 61; $i <= 120; $i++) {
-                                echo "<a type='button' class='complected'>{$i}</a>";
+                                echo "<a type='button' class='incomplete'>{$i}</a>";
                             }
-
                             ?>
 
                         </div>
 
-                        <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                            <?php
-                            for ($i = 121; $i <= 180; $i++) {
-                                echo "<a type='button' class='complected'>{$i}</a>";
-                            }
-
-                            ?>
-
-                        </div>
+                       
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <li class="nav-item navactive1">
                                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Page - 1 </a>
@@ -128,7 +144,7 @@ if ($row = mysqli_fetch_array($result)) {
             </div>
 
 
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <!-- general form elements -->
                 <div class="card card-primary">
                     <div class="card-header">
@@ -136,41 +152,71 @@ if ($row = mysqli_fetch_array($result)) {
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-
-                    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img class="d-block w-100" src="..." alt="First slide">
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="..." alt="Second slide">
-                            </div>
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="..." alt="Third slide">
-                            </div>
-                        </div>
-                    </div>
-
-
-
                     <form action="">
-                        <div class="card-body text-center">
-                            <img src="questions/1.png" alt="" class="question">
-                            <br><br><br>
-                            <label for="">1.</label> <input type="radio" class="option" id="opt" name="group[]"> &nbsp; &nbsp;
-                            <label for="">2.</label> <input type="radio" class="option" id="opt" name="group[]"> &nbsp; &nbsp;
-                            <label for="">3.</label> <input type="radio" class="option" id="opt" name="group[]"> &nbsp; &nbsp;
-                            <label for="">4.</label> <input type="radio" class="option" id="opt" name="group[]"> &nbsp; &nbsp;
-
-                            <br><br><br><br> <br><br>
-                            <p align="center">
-                                <a href="" class="btn btn-primary"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i>&nbsp;Prev</a>
-                                <a href="" class="btn btn-primary">Next&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true"></i></a>&nbsp;
-                                <input class="btn btn-primary" type="reset" value="Reset">
-
-                            </p>
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
+                            <!-- data-interval="false" -->
+                            <!-- <ol class="carousel-indicators">
+                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                            </ol> -->
+                            <div class="carousel-inner">
+                                <?php
+                                $i=1;
+                                foreach ($questions_array as $val) {
+                                    if ($i == 1) {
+                                       
+                                        echo "<div class='carousel-item active'>
+                                        <div class='card-body text-center'>
+                                            <img src='admin/{$val}' alt='' class='question'>
+                                            <br><br><br>
+                                            <label for=''>1.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                            <label for=''>2.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                            <label for=''>3.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                            <label for=''>4.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                        </div>
+                                    </div>";
+                                    } else {
+                                        echo "<div class='carousel-item'>
+                                        <div class='card-body text-center'>
+                                            <img src='admin/{$val}' alt=' class='question'>
+                                            <br><br><br>
+                                            <label for=''>1.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                            <label for=''>2.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                            <label for=''>3.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                            <label for=''>4.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
+                                        </div>
+                                    </div>";
+                                    }
+                                    $i++;
+                                }
+                                ?>
+                            </div>
+                            <!-- <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a> -->
                         </div>
                     </form>
+
+
+
+
+                    <div class="card-body text-center">
+                        <p align="center">
+                            <a href="#carouselExampleIndicators" role="button" data-slide="prev" class="btn btn-primary">
+                                <i class="fa fa-arrow-circle-left" aria-hidden="true" data-slide="prev"></i>&nbsp;Prev
+                            </a>
+                            <a href="#carouselExampleIndicators" role="button" data-slide="next" class="btn btn-primary">
+                                Next&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true" data-slide="next"></i>
+                            </a>
+                        </p>
+                    </div>
+
 
                     <!-- /.card-body -->
 
@@ -230,11 +276,9 @@ if ($row = mysqli_fetch_array($result)) {
     }, 1000);
 
 
-    $('.carousel').carousel({
-  interval: 2000
-})
-
-
+    // $('.carousel').carousel({
+    //     interval: 2000
+    // })
 </script>
 </body>
 

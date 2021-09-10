@@ -127,6 +127,8 @@
             $conn = DB_Connect();
             $query = "SELECT * FROM `subject`";
             $result = $conn->query($query);
+            if($result!==false)
+            {
             while ($row = mysqli_fetch_array($result)) {
               echo "<li class='nav-item'>
                 <a href='questions.php?id={$row['id']}' class='nav-link'>
@@ -135,28 +137,13 @@
                 </a>
               </li>";
             }
+          }
             ?>
             
           </ul>
         </li>
 
-
-
-
         <!-- <li class="nav-header">EXAMPLES</li> -->
-
-
-
-
-
-
-
-
-
-
-
-
-
 
       </ul>
     </nav>
