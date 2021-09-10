@@ -4,12 +4,19 @@ if (!isset($_SESSION['email'])) {
     echo "<script>window.location.href = 'index.php';</script>";
 }
 
+if(isset($_REQUEST['submit']))
+{
+    foreach($_REQUEST['rad'] as $check)
+    {
+        echo $check;
+    }
+}
+
 $conn = DB_Connect();
-$query = "SELECT * FROM `marks`";;
+$query = "SELECT * FROM `marks`";
 
 $result = $conn->query($query);
 if ($row = mysqli_fetch_array($result)) {
-
     $time_arr = explode(":", $row['time']);
 }
 ?>
@@ -45,8 +52,8 @@ if ($row = mysqli_fetch_array($result)) {
 
             while ($row1 = mysqli_fetch_array($result1)) {
                 if ($i == 1) {
-                    $questions .=$row1['question_img'];
-                    $answers .=$row1['qstn_ans'];
+                    $questions .= $row1['question_img'];
+                    $answers .= $row1['qstn_ans'];
                 } else {
 
                     $questions .= "," . $row1['question_img'];
@@ -56,8 +63,8 @@ if ($row = mysqli_fetch_array($result)) {
             }
         }
     }
-    $questions_array = explode(',',$questions);
-    $answers_array = explode(',',$answers);
+    $questions_array = explode(',', $questions);
+    $answers_array = explode(',', $answers);
     //print_r($questions_array);
     //echo "<br>";
     //print_r($answers_array);
@@ -101,36 +108,41 @@ if ($row = mysqli_fetch_array($result)) {
                     <div class="tab-content p-4" id="myTabContent">
                         <div class="tab-pane fade show active" id="home" role="tabpanel">
                             <?php
-                            for ($i = 0; $i <= 59; $i++) {
+
+                            for ($i = 0; $i < count($questions_array); $i++) {
                                 $num = $i + 1;
                                 echo "<a type='button' class='incomplete' data-target='#carouselExampleIndicators' id='ind{$num}' data-slide-to='{$i}' class='active'>{$num}</a>";
                             }
                             ?>
 
                         </div>
-                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <?php
                             for ($i = 61; $i <= 120; $i++) {
                                 echo "<a type='button' class='incomplete'>{$i}</a>";
                             }
                             ?>
 
-                        </div>
+                        </div> -->
 
-                       
+
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            <li class="nav-item navactive1">
-                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Page - 1 </a>
-                            </li>
-                            <li class="nav-item navactive1">
-                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Page - 2</a>
-                            </li>
-                            <li class="nav-item navactive1">
-                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Page - 3</a>
-                            </li>
+                            <?php
+                            for ($i = 0; $i < ceil(count($questions_array) / 60); $i++) {
+                                if ($i == 0) {
+                                    echo "<li class='nav-item navactive1'>
+                                    <a class='nav-link active' id='home-tab' data-toggle='tab' href='#home' role='tab' aria-controls='home' aria-selected='true'>Page - 1 </a>
+                                    </li>";
+                                } else {
+                                    echo "<li class='nav-item navactive1'>
+                                    <a class='nav-link' id='profile-tab' data-toggle='tab' href='#profile' role='tab' aria-controls='profile' aria-selected='false'>Page - 2</a>
+                                    </li>";
+                                }
+                            }
+                            ?>
+
+
                         </ul>
-
-
 
                     </div>
                     <!-- tabs end -->
@@ -162,30 +174,31 @@ if ($row = mysqli_fetch_array($result)) {
                             </ol> -->
                             <div class="carousel-inner">
                                 <?php
-                                $i=1;
+                                $i = 1;
                                 foreach ($questions_array as $val) {
                                     if ($i == 1) {
-                                       
+
                                         echo "<div class='carousel-item active'>
                                         <div class='card-body text-center'>
                                             <img src='admin/{$val}' alt='' class='question'>
-                                            <br><br><br>
-                                            <label for=''>1.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                            <label for=''>2.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                            <label for=''>3.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                            <label for=''>4.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                        </div>
+                                            <br><br><br>";
+                                        for ($j = 1; $j <= 4; $j++) {
+                                            echo "<label for=''>{$j}.</label> 
+                                            <input type='radio' value='{$j}' onclick='show_qn(this)' class='option' id='{$i}' name='rad[]'> &nbsp; &nbsp";
+                                        }
+                                        echo "</div>
                                     </div>";
                                     } else {
                                         echo "<div class='carousel-item'>
                                         <div class='card-body text-center'>
                                             <img src='admin/{$val}' alt=' class='question'>
-                                            <br><br><br>
-                                            <label for=''>1.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                            <label for=''>2.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                            <label for=''>3.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                            <label for=''>4.</label> <input type='radio' class='option' id='opt' name='group{$i}[]'> &nbsp; &nbsp;
-                                        </div>
+                                            <br><br><br>";
+                                        for ($j = 1; $j <= 4; $j++) {
+                                            echo "<label for=''>{$j}.</label> 
+                                            <input type='radio' value='{$j}' onclick='show_qn(this)' class='option' id='{$i}' name='rad[]'> &nbsp; &nbsp";
+                                        }
+
+                                        echo "</div>
                                     </div>";
                                     }
                                     $i++;
@@ -201,22 +214,24 @@ if ($row = mysqli_fetch_array($result)) {
                                 <span class="sr-only">Next</span>
                             </a> -->
                         </div>
+
+
+
+
+
+                        <div class="card-body text-center">
+                            <p align="center">
+                                <a href="#carouselExampleIndicators" role="button" data-slide="prev" class="btn btn-primary">
+                                    <i class="fa fa-arrow-circle-left" aria-hidden="true" data-slide="prev"></i>&nbsp;Prev
+                                </a>
+                                <a href="#carouselExampleIndicators" role="button" data-slide="next" class="btn btn-primary">
+                                    Next&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true" data-slide="next"></i>
+                                </a>
+                            </p>
+                            <button type="submit" name='submit' class="btn btn-primary">Submit Entire Exam and Close</button>
+                        </div>
+
                     </form>
-
-
-
-
-                    <div class="card-body text-center">
-                        <p align="center">
-                            <a href="#carouselExampleIndicators" role="button" data-slide="prev" class="btn btn-primary">
-                                <i class="fa fa-arrow-circle-left" aria-hidden="true" data-slide="prev"></i>&nbsp;Prev
-                            </a>
-                            <a href="#carouselExampleIndicators" role="button" data-slide="next" class="btn btn-primary">
-                                Next&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true" data-slide="next"></i>
-                            </a>
-                        </p>
-                    </div>
-
 
                     <!-- /.card-body -->
 
@@ -233,6 +248,7 @@ if ($row = mysqli_fetch_array($result)) {
 
         </div>
     </div>
+    <p id="p"></p>
 </body>
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -279,6 +295,36 @@ if ($row = mysqli_fetch_array($result)) {
     // $('.carousel').carousel({
     //     interval: 2000
     // })
+
+
+    function toggleRadio(event) {
+        if (event.target.type === 'radio' && event.target.checked === true) {
+            setTimeout(() => {
+                event.target.checked = false;
+
+            }, 0);
+        }
+    }
+    document.addEventListener('mouseup', toggleRadio);
+
+    function show_qn(id) {
+        setTimeout(() => {
+
+
+            var btnid = "ind" + id.id;
+            document.getElementById("p").innerHTML = id.checked;
+            if (id.checked) {
+                document.getElementById(btnid).classList.remove("incomplete");
+                document.getElementById(btnid).classList.add("complected");
+            } else {
+
+                document.getElementById(btnid).classList.remove("complected");
+                document.getElementById(btnid).classList.add("incomplete");
+
+            }
+
+        }, 0);
+    }
 </script>
 </body>
 
