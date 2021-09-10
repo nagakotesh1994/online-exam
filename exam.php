@@ -4,12 +4,13 @@ if (!isset($_SESSION['email'])) {
     echo "<script>window.location.href = 'index.php';</script>";
 }
 
-if(isset($_REQUEST['submit']))
-{
-    foreach($_REQUEST['rad'] as $check)
-    {
-        echo $check;
-    }
+if (isset($_REQUEST['submit'])) {
+    $email=$_SESSION['email'];
+    $ans=$_REQUEST['user_ans'];
+
+    $data = array("email"=>$email,"ans"=>$ans);
+    Insert_Student_ans($data);
+
 }
 
 $conn = DB_Connect();
@@ -101,7 +102,7 @@ if ($row = mysqli_fetch_array($result)) {
 
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Quick Example</h3>
+                        <h3 class="card-title">Question Numbers</h3>
                     </div>
                     <!-- tabs start -->
 
@@ -160,11 +161,12 @@ if ($row = mysqli_fetch_array($result)) {
                 <!-- general form elements -->
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Quick Example</h3>
+                        <h3 class="card-title">Question View</h3>
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="">
+                    <form action="" method="post">
+                        <input type="text" name="user_ans" id="user_ans">
                         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                             <!-- data-interval="false" -->
                             <!-- <ol class="carousel-indicators">
@@ -184,7 +186,7 @@ if ($row = mysqli_fetch_array($result)) {
                                             <br><br><br>";
                                         for ($j = 1; $j <= 4; $j++) {
                                             echo "<label for=''>{$j}.</label> 
-                                            <input type='radio' value='{$j}' onclick='show_qn(this)' class='option' id='{$i}' name='rad[]'> &nbsp; &nbsp";
+                                            <input type='radio' value='{$j}' onclick='show_qn(this)' class='option' id='{$i}' name='rad{$i}[]'> &nbsp; &nbsp";
                                         }
                                         echo "</div>
                                     </div>";
@@ -195,7 +197,7 @@ if ($row = mysqli_fetch_array($result)) {
                                             <br><br><br>";
                                         for ($j = 1; $j <= 4; $j++) {
                                             echo "<label for=''>{$j}.</label> 
-                                            <input type='radio' value='{$j}' onclick='show_qn(this)' class='option' id='{$i}' name='rad[]'> &nbsp; &nbsp";
+                                            <input type='radio' value='{$j}' onclick='show_qn(this)' class='option' id='{$i}' name='rad{$i}[]'> &nbsp; &nbsp";
                                         }
 
                                         echo "</div>
@@ -248,7 +250,7 @@ if ($row = mysqli_fetch_array($result)) {
 
         </div>
     </div>
-    <p id="p"></p>
+
 </body>
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -307,22 +309,47 @@ if ($row = mysqli_fetch_array($result)) {
     }
     document.addEventListener('mouseup', toggleRadio);
 
+    <?php
+    $qstr = "";
+    for ($i = 0; $i < count($questions_array); $i++) {
+        if ($i == 0)
+            $qstr .= "0";
+        else
+            $qstr .= ",0";
+    }
+    echo "var qstr='" . $qstr . "';";
+
+    ?>
+
+    var q_array = qstr.split(',');
+    //var ArrToStr = "";
+
     function show_qn(id) {
         setTimeout(() => {
 
 
             var btnid = "ind" + id.id;
-            document.getElementById("p").innerHTML = id.checked;
+
             if (id.checked) {
                 document.getElementById(btnid).classList.remove("incomplete");
                 document.getElementById(btnid).classList.add("complected");
+                q_array[id.id - 1] = id.value;
             } else {
 
                 document.getElementById(btnid).classList.remove("complected");
                 document.getElementById(btnid).classList.add("incomplete");
-
+                q_array[id.id - 1] = '0';
             }
-
+            //console.log(q_array);
+            var ArrToStr = "";
+            for (var i = 0; i < q_array.length; i++) {
+                if (i == 0)
+                    ArrToStr += i + ':' + q_array[i];
+                else
+                    ArrToStr += ',' + i + ':' + q_array[i];
+            }
+            console.log(ArrToStr);
+            document.getElementById('user_ans').value=ArrToStr;
         }, 0);
     }
 </script>

@@ -323,4 +323,36 @@ function Create_Marks()
         echo "Error creating subject table: " . $conn->error;
     }
 }
+
+function Create_Student_ans()
+{
+    $conn = DB_Connect();
+    $query = "CREATE TABLE IF NOT EXISTS student_ans (
+        `id` INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        `email` VARCHAR(255) NOT NULL,
+        `ans` VARCHAR(2000) NOT NULL,
+        reg_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)";
+    if ($conn->query($query) === TRUE) {
+        //echo "Table MyGuests created successfully";
+    } else {
+        echo "Error creating subject table: " . $conn->error;
+    }
+}
+
+
+
+function Insert_Student_ans($FromData)
+{
+    $conn = DB_Connect();
+    Create_Student_ans();
+    $FromData = Sanitize($FromData);
+    extract($FromData);
+    $query = "INSERT INTO student_ans (`email`, `ans`) VALUES ('$email','$ans')";
+    if ($conn->query($query) === TRUE) {
+        return 1;
+    } else {
+        echo "Error creating student_ans table: " . $conn->error;
+        return 0;
+    }
+}
 Create_Marks();
