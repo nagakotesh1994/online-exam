@@ -1,0 +1,62 @@
+.complected {
+    outline: none;
+    background-color: #28A745;
+    border: 0px;
+    color: white;
+    width: 50px;
+    height: 50px;
+    margin: 1px;
+    text-align: center;
+    padding-top: 10px;
+    border-radius: 5px;
+}
+
+.incomplete {
+    outline: none;
+    background-color: #6C757D;
+    border: 0px;
+    color: white;
+    width: 50px;
+    height: 50px;
+    margin: 1px;
+    text-align: center;
+    padding-top: 10px;
+    border-radius: 5px;
+}
+
+
+.complected:hover{
+    color: #fff;
+}
+.incomplete:hover{
+    color: #fff;
+}
+
+.complected:active{
+    background-color: #007BFF;
+}
+.incomplete:active{
+    background-color: #007BFF;
+}
+
+
+.question{
+    padding:5px;
+    /* width: 50%; */
+    /* height: 50px; */
+}
+
+.option{
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.navactive1 a.active {
+    background-color: #0075FF !important ;
+    color: #fff !important;
+}
+
+#time{
+    color: red;
+}
