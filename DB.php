@@ -349,6 +349,7 @@ function Insert_Student_ans($FromData)
     extract($FromData);
     $query = "INSERT INTO student_ans (`email`, `ans`) VALUES ('$email','$ans')";
     if ($conn->query($query) === TRUE) {
+        echo "<script>window.location.href = 'examCompleted.php';</script>";
         return 1;
     } else {
         echo "Error creating student_ans table: " . $conn->error;

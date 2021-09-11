@@ -4,13 +4,13 @@ if (!isset($_SESSION['email'])) {
     echo "<script>window.location.href = 'index.php';</script>";
 }
 
-if (isset($_REQUEST['submit'])) {
-    $email=$_SESSION['email'];
-    $ans=$_REQUEST['user_ans'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = $_SESSION['email'];
+    $ans = $_REQUEST['user_ans'];
 
-    $data = array("email"=>$email,"ans"=>$ans);
+    $data = array("email" => $email, "ans" => $ans);
+    print_r($data);
     Insert_Student_ans($data);
-
 }
 
 $conn = DB_Connect();
@@ -38,6 +38,9 @@ if ($row = mysqli_fetch_array($result)) {
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css">
     <link rel="stylesheet" href="css/style.css">
+
+
+
     <?php
     $query = "SELECT * FROM `subject`";
     $result = $conn->query($query);
@@ -56,7 +59,6 @@ if ($row = mysqli_fetch_array($result)) {
                     $questions .= $row1['question_img'];
                     $answers .= $row1['qstn_ans'];
                 } else {
-
                     $questions .= "," . $row1['question_img'];
                     $answers .= "," . $row1['qstn_ans'];
                 }
@@ -107,40 +109,64 @@ if ($row = mysqli_fetch_array($result)) {
                     <!-- tabs start -->
 
                     <div class="tab-content p-4" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home" role="tabpanel">
+                        <div class="tab-pane fade show active" id="page1" role="tabpanel">
                             <?php
 
                             for ($i = 0; $i < count($questions_array); $i++) {
                                 $num = $i + 1;
                                 echo "<a type='button' class='incomplete' data-target='#carouselExampleIndicators' id='ind{$num}' data-slide-to='{$i}' class='active'>{$num}</a>";
                             }
+                            // for ($i = 1; $i <= 60; $i++) {
+                            //     echo "<a type='button' class='incomplete'>{$i}</a>";
+                            // }
                             ?>
 
                         </div>
-                        <!-- <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="tab-pane fade" id="page2" role="tabpanel" aria-labelledby="profile-tab">
                             <?php
                             for ($i = 61; $i <= 120; $i++) {
                                 echo "<a type='button' class='incomplete'>{$i}</a>";
                             }
                             ?>
 
-                        </div> -->
+                        </div>
+
+                        <div class="tab-pane fade" id="page3" role="tabpanel" aria-labelledby="profile-tab">
+                            <?php
+                            for ($i = 61; $i <= 120; $i++) {
+                                echo "<a type='button' class='incomplete'>{$i}</a>";
+                            }
+                            ?>
+
+                        </div>
 
 
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                             <?php
-                            for ($i = 0; $i < ceil(count($questions_array) / 60); $i++) {
-                                if ($i == 0) {
-                                    echo "<li class='nav-item navactive1'>
-                                    <a class='nav-link active' id='home-tab' data-toggle='tab' href='#home' role='tab' aria-controls='home' aria-selected='true'>Page - 1 </a>
-                                    </li>";
-                                } else {
-                                    echo "<li class='nav-item navactive1'>
-                                    <a class='nav-link' id='profile-tab' data-toggle='tab' href='#profile' role='tab' aria-controls='profile' aria-selected='false'>Page - 2</a>
-                                    </li>";
-                                }
-                            }
+                            // for ($i = 0; $i < ceil(count($questions_array) / 60); $i++) {
+                            //     if ($i == 0) {
+                            //         echo "<li class='nav-item navactive1'>
+                            //         <a class='nav-link active' id='home-tab' data-toggle='tab' href='#home' role='tab' aria-controls='home' aria-selected='true'>Page - 1 </a>
+                            //         </li>";
+                            //     } else {
+                            //         echo "<li class='nav-item navactive1'>
+                            //         <a class='nav-link' id='profile-tab' data-toggle='tab' href='#profile' role='tab' aria-controls='profile' aria-selected='false'>Page - 2</a>
+                            //         </li>";
+                            //     }
+                            // }
                             ?>
+
+                            <li class='nav-item navactive1'>
+                                <a class='nav-link active' id='home-tab' data-toggle='tab' href='#page1' role='tab' aria-controls='home' aria-selected='true'>Page - 1 </a>
+                            </li>
+
+                            <li class='nav-item navactive1'>
+                                <a class='nav-link' id='home-tab' data-toggle='tab' href='#page2' role='tab' aria-controls='home' aria-selected='true'>Page - 2 </a>
+                            </li>
+
+                            <li class='nav-item navactive1'>
+                                <a class='nav-link' id='home-tab' data-toggle='tab' href='#page3' role='tab' aria-controls='home' aria-selected='true'>Page - 3 </a>
+                            </li>
 
 
                         </ul>
@@ -165,8 +191,8 @@ if ($row = mysqli_fetch_array($result)) {
                     </div>
                     <!-- /.card-header -->
                     <!-- form start -->
-                    <form action="" method="post">
-                        <input type="text" name="user_ans" id="user_ans">
+                    <form action="exam.php" method="POST" name="frmProduct" id="frmProduct">
+                        <input type="hidden" name="user_ans" id="user_ans">
                         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">
                             <!-- data-interval="false" -->
                             <!-- <ol class="carousel-indicators">
@@ -207,19 +233,7 @@ if ($row = mysqli_fetch_array($result)) {
                                 }
                                 ?>
                             </div>
-                            <!-- <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a> -->
                         </div>
-
-
-
-
 
                         <div class="card-body text-center">
                             <p align="center">
@@ -230,10 +244,45 @@ if ($row = mysqli_fetch_array($result)) {
                                     Next&nbsp;<i class="fa fa-arrow-circle-right" aria-hidden="true" data-slide="next"></i>
                                 </a>
                             </p>
-                            <button type="submit" name='submit' class="btn btn-primary">Submit Entire Exam and Close</button>
+                            <input type="button" onclick="submitAction()" class="btn btn-primary" value="Submit Entire and Stop Session">
                         </div>
 
                     </form>
+                    <script>
+                        function submitAction() {
+                            document.frmProduct.submit();
+                        }
+                        var h = <?php echo $time_arr[0]; ?>; // hours
+                        var m = <?php echo $time_arr[1]; ?>; //min
+                        var s = <?php echo $time_arr[2]; ?>; //sec
+                        var intime;
+
+
+                        function timer() {
+                            if (m == 0 && h > 0) {
+                                h--;
+                                m = 59;
+                            } else if (s == 0) {
+                                m--;
+                                s = 59;
+                            } else {
+                                s--;
+                            }
+
+                            if (h == 0 && m == 0 && s == 0) {
+
+
+                                submitAction();
+                                clearInterval(intime);
+
+                            }
+
+                            document.getElementById("time").innerHTML = h + ":" + m + ":" + s;
+                        }
+                        intime = setInterval(function() {
+                            timer();
+                        }, 1000);
+                    </script>
 
                     <!-- /.card-body -->
 
@@ -264,34 +313,36 @@ if ($row = mysqli_fetch_array($result)) {
     });
 
 
-    var h = <?php echo $time_arr[0]; ?>; // hours
-    var m = <?php echo $time_arr[1]; ?>; //min
-    var s = <?php echo $time_arr[2]; ?>; //sec
-    var intime;
+    // var h = <?php echo $time_arr[0]; ?>; // hours
+    // var m = <?php echo $time_arr[1]; ?>; //min
+    // var s = <?php echo $time_arr[2]; ?>; //sec
+    // var intime;
 
 
+    // function timer() {
+    //     if (m == 0 && h > 0) {
+    //         h--;
+    //         m = 59;
+    //     } else if (s == 0) {
+    //         m--;
+    //         s = 59;
+    //     } else {
+    //         s--;
+    //     }
 
-    function timer() {
-        if (m == 0 && h > 0) {
-            h--;
-            m = 59;
-        } else if (s == 0) {
-            m--;
-            s = 59;
-        } else {
-            s--;
-        }
+    //     if (h == 0 && m == 0 && s == 0) {
 
-        if (h == 0 && m == 0 && s == 0) {
-            //submit form when it is 0
-            clearInterval(intime);
-        }
 
-        document.getElementById("time").innerHTML = h + ":" + m + ":" + s;
-    }
-    intime = setInterval(function() {
-        timer();
-    }, 1000);
+    //         document.myfrom.submit();
+    //         clearInterval(intime);
+
+    //     }
+
+    //     document.getElementById("time").innerHTML = h + ":" + m + ":" + s;
+    // }
+    // intime = setInterval(function() {
+    //     timer();
+    // }, 1000);
 
 
     // $('.carousel').carousel({
@@ -349,7 +400,7 @@ if ($row = mysqli_fetch_array($result)) {
                     ArrToStr += ',' + i + ':' + q_array[i];
             }
             console.log(ArrToStr);
-            document.getElementById('user_ans').value=ArrToStr;
+            document.getElementById('user_ans').value = ArrToStr;
         }, 0);
     }
 </script>

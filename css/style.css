@@ -25,12 +25,7 @@
 }
 
 
-.complected:hover{
-    color: #fff;
-}
-.incomplete:hover{
-    color: #fff;
-}
+
 
 .complected:active{
     background-color: #007BFF;
@@ -38,6 +33,17 @@
 .incomplete:active{
     background-color: #007BFF;
 }
+
+
+a.complected:hover{
+    color:#fff;
+    background-color: #007BFF;
+}
+a.incomplete:hover{
+    color:#fff;
+    background-color: #007BFF;
+}
+
 
 
 .question{

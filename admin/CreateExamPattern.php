@@ -159,7 +159,7 @@ include '../DB.php';
                       <label for='exampleInputEmail1'>Exam Time:</label>
                       <div class='row'>
                         <div class='col-3'>
-                          <input type='time' name='time' step='1' value='{$row['time']}' class='form-control' placeholder='.col-3'>
+                          <input type='text' name='time' value='{$row['time']}' class='form-control' placeholder='xx:xx:xx'>
                         </div>
                       </div>
                     </div>";
